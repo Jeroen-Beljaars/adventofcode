@@ -1,5 +1,3 @@
-import re
-
 def count_trees_in_path(biome):
     """
     Find the amount of trees which cross the provided path of 3 right 1 down
