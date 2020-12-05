@@ -44,46 +44,25 @@ BBFFBBFRLL: row 102, column 4, seat ID 820.
 As a sanity check, look through your list of boarding passes. What is the highest seat ID on a boarding pass?
 """
 
-import re
-from math import ceil, floor
-
-REQUIRED_ATTRIBUTES = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
-
 
 def calculate_seat_id(seat_instructions):
     """
     :param seat_instruction:    The direction to the seat using binary space partitioning.
     :return                     The Seat ID (Row * 8 + column)
     """
-    row_min, row_max = 0, 127
-    column_min, column_max = 0, 7
+    # Extract the row instructions and convert it to binary
+    row_instructions = seat_instructions[:7].replace("F", "0").replace("B", "1")
 
-    seat_row, seat_column = 0, 0
-    for instruction in seat_instructions:
-        # F means lower half
-        if instruction == "F":
-            if row_max - row_min == 1:
-                seat_row = row_min
-                continue
+    # Extract the column instructions and convert it to binary
+    column_instructions = seat_instructions[7:].replace("L", "0").replace("R", "1")
 
-            row_max -= ceil((row_max - row_min) / 2)
-        elif instruction == "B":
-            if row_max - row_min == 1:
-                seat_row = row_max
-                continue
+    # Convert the row binary to a number
+    seat_row = int(row_instructions, 2)
 
-            row_min += ceil((row_max - row_min) / 2)
-        elif instruction == "L":
-            if column_max - column_min == 1:
-                seat_column = column_min
-                continue
-            column_max -= ceil((column_max - column_min) / 2)
-        elif instruction == "R":
-            if column_max - column_min == 1:
-                seat_column = column_max
-                continue
-            column_min += ceil((column_max - column_min) / 2)
+    # Convert the col binary to a number
+    seat_column = int(column_instructions, 2)
 
+    # Convert it to binary
     return (seat_row * 8) + seat_column
 
 if __name__ == '__main__':
