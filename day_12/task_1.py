@@ -57,7 +57,8 @@ def handle_instructions(instructions):
         amount = int(amount)
 
         if direction in [LEFT, RIGHT]:
-            current_degree = (current_degree - amount if direction == LEFT else current_degree + amount) % 360
+            current_degree += (-amount if direction == LEFT else amount)
+            current_degree %= 360
         else:
             direction_values[degree_map[current_degree] if direction == FORWARD else direction] += amount
 
